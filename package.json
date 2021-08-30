@@ -4,6 +4,7 @@
   "description": "To create Page , Driving by configs.",
   "main": "index.js",
   "scripts": {
+    "run": "node ./lib/run/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/czhmisaka/configForPage#readme",
   "dependencies": {
     "lodash": "^4.17.21",
-    "vue": "^2.6.14"
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.2"
   }
 }
