@@ -1,0 +1,28 @@
+{
+  "name": "configforpage",
+  "version": "0.0.1",
+  "description": "To create Page , Driving by configs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/czhmisaka/configForPage.git"
+  },
+  "keywords": [
+    "config",
+    "page",
+    "vue"
+  ],
+  "author": "czhmisaka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/czhmisaka/configForPage/issues"
+  },
+  "homepage": "https://github.com/czhmisaka/configForPage#readme",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "vue": "^2.6.14"
+  }
+}
