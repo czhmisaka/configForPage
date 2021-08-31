@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2021-08-27 23:23:50
- * @LastEditTime: 2021-08-30 10:59:20
+ * @LastEditTime: 2021-08-31 19:12:47
  * @LastEditors: Please set LastEditors
  * @Description: 主要js工具
  * @FilePath: /configForPage/lib/util/index.js
@@ -368,3 +368,6 @@ module.exports = {
     openDownloadDialog,
     downloadUrlFile
 }
+
+// 为了兼容es6
+module.exports.default = module.exports;
