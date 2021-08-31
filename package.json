@@ -4,7 +4,8 @@
   "description": "To create Page , Driving by configs.",
   "main": "index.js",
   "scripts": {
-    "run": "node ./lib/run/main.js",
+    "dev": "",
+    "run": "node ./run/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
