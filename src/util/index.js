@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2021-08-27 23:23:50
- * @LastEditTime: 2021-09-01 17:10:47
+ * @LastEditTime: 2021-09-01 17:25:35
  * @LastEditors: Please set LastEditors
  * @Description: 主要js工具
  * @FilePath: /configForPage/lib/util/index.js
