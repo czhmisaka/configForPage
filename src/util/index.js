@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2021-08-27 23:23:50
- * @LastEditTime: 2021-08-31 19:12:47
+ * @LastEditTime: 2021-09-01 17:10:47
  * @LastEditors: Please set LastEditors
  * @Description: 主要js工具
  * @FilePath: /configForPage/lib/util/index.js
@@ -156,7 +156,7 @@ const loadConfigList = async (that, queryItemApiConfig = null, baseRoot = null) 
             let res = Api[x].localData ? {
                 data: Api[x].localData
             } : Api[x].data ? await await that.$axios.post(that.$api[Api[x].root || root][Api[x].api], Api[x]
-                .data(that)) : await that.$axios.get(that.$api[Api[x].root || root][Api[x].api])
+                .data(that)) : await that.$axios.get(that.$api[Api[x].root || root][Api[x].api] + (Api[x].getData ? Api[x].getData(that) : ''))
             if (JSON.stringify(res).split('stackTrace').length > 1) {
                 that.$msg('【' + Api[x].root + '.' + Api[x].api + '】请求报错')
             } else {
