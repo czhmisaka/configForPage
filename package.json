@@ -1,6 +1,6 @@
 {
   "name": "configforpage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "To create Page , Driving by configs.",
   "main": "index.js",
   "scripts": {
