@@ -12,6 +12,8 @@ We should be free from repetitive tasks like CRUD,that is why i do this work.
 
 ### 近期任务表
 1. 组件自动注入
+   1. 获取路由对象/没有则构建路由对象注入
+   2. 
 2. UTIL函数以及参数自动注入
 3. 扫描指定路径下的js文件打包为config对象用于页面生成
 4. 支持插槽模式对list页面进行修改
