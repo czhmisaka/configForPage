@@ -1,63 +1,89 @@
 <!--
  * @Author: your name
  * @Date: 2021-08-27 23:37:38
- * @LastEditTime: 2021-08-27 23:37:55
+ * @LastEditTime: 2021-09-03 16:09:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /configForPage/components/normalListAction/InfoTemplate.vue/infoTemplate.vue
 -->
 <template>
-  <div class="infoBox flex">
-    <el-form label-suffix=":" @submit.native.prevent size='mini' class='infoBlock' v-for="(it,index) in dataTemplate"
-      v-bind:key="index" :label-position="$isMobile()?'top':labelPosition||'left'"
-      :style="index!=0?'border-left:0.5px #efefef solid;':''">
-      <div v-for="(item,index) in it" v-bind:key="item.prop+index">
-        <el-form-item class="info" :label="item.label"
-          v-if="item.noValueNoKey?item.dataCheck?item.dataCheck(infoData):infoData[item.prop]:true">
-          <b slot="label">{{item.label}}</b>
-          <span v-if="item.template">
-            <span v-for="(its,ind) in item.template" v-bind:key="(its.value+ind)||'asd'+ind">
-              <span v-if="!its.element">{{its.value?its.value:infoData[its.key]?infoData[its.key]:its.error}}</span>
-              <span v-if="its.element=='tag'" @click="itsClick(its,infoData)" :style="its.click?'cursor:pointer;':''">
-                <el-tag :type="its.elementType">{{its.value?its.value:infoData[its.key]}}</el-tag>
-              </span>
-              <span v-if="its.element == 'func'" @click="itsClick(its,infoData)"
-                :style="its.click?'cursor:pointer;':''">
-                {{its.return(infoData,queryItemConfig)}}
-              </span>
-              <span v-if="its.element == 'funcTag'">
-                <span v-if="its.return(infoData,queryItemConfig).length">
-                  <span v-for="(itTag,indTag) in its.return(infoData,queryItemConfig)" :key="indTag+'asd'"
-                    :style="itTag.click?'cursor:pointer;':''">
-                    <el-tag :type="itTag['type']" @click="itsClick(itTag,infoData)" style="margin:0px 0px 5px 5px;">
-                      {{itTag['data']}}
-                    </el-tag>
-                  </span>
-                </span>
-                <span v-else @click="itsClick(its,infoData)" :style="its.click?'cursor:pointer;':''">
-                  <el-tag :type="its.return(infoData,queryItemConfig)['type']">
-                    {{its.return(infoData,queryItemConfig)['data']}}</el-tag>
-                </span>
-              </span>
-            </span>
-          </span>
-          <span
-            v-if="!item.template">{{infoData[item.prop]!==0?infoData[item.prop]||$i18n.get({id:"cngppoc.src.components.applicationBasicInfo.infoDataItemPropNoData",dm:"暂无数据"}):infoData[item.prop]}}</span>
-        </el-form-item>
-      </div>
-    </el-form>
-  </div>
+  <!--
+  此尚未开发完成，请谨慎引用
+-->
+  <el-form @submit.native.prevent :inline="inline" :model="inputQueryOption" label-suffix=":" label-width="150px"
+    :label-position="labelPosition" class="demo-form-inline" size="mini">
+    <el-form-item v-for="(item,index) in queryItemOptions" :key="item.prop+index" :label="item.label">
+      <el-select clearable v-model="inputQueryOption[item.prop]" v-if="item.type==='select'" @change="onChange()"
+        :placeholder="$i18n.get({id:'cngppoc.src.components.applicationBasicInfo.Select',dm:'请选择'})+item.label">
+        <el-option v-for="(it,ind) in queryItemConfig[item.prop]" :key="ind" :label="it.label" :value="it.value">
+        </el-option>
+      </el-select>
+      <el-select clearable v-model="inputQueryOption[item.prop]" v-if="item.type==='selects'"
+        :placeholder="$i18n.get({id:'cngppoc.src.components.applicationBasicInfo.Select',dm:'请选择'})+item.label" multiple
+        collapse-tags @change="onChange()">
+        <el-option v-for="(it,ind) in queryItemConfig[item.prop]" :key="ind" :label="it.label" :value="it.value">
+        </el-option>
+      </el-select>
+      <el-select style="width:auto" v-if="item.type==='inputList'" v-model="inputQueryOption[item.prop]" multiple
+        clearable filterable allow-create default-first-option collapse-tags :placeholder="item.label"
+        @change="batchInput('inputQueryOption',item.prop)">
+        <el-option v-for="item in inputQueryOption[item.prop]" :key="item" :label="item" :value="item">
+        </el-option>
+      </el-select>
+      <el-input v-model="inputQueryOption[item.prop]" v-if="item.type==='input'" :placeholder="item.label"
+        @change="onChange()">
+      </el-input>
+      <el-cascader v-if="item.type==='areaCascader'" :options="queryItemConfig[item.prop]"
+        :props="{ expandTrigger: 'hover' ,value:'id',label:'nameEn',multiple: !item['noMultiple'] }" style="width:485px"
+        :placeholder="$i18n.get({id:'cngppoc.src.components.applicationBasicInfo.Select',dm:'请选择'})+item.label"
+        collapse-tags clearable @change="(e)=>{areaHandleChange(e,item)}" filterable>
+        <template slot-scope="{ node, data }">
+          <span>{{ data.nameEn }}</span>
+          <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        </template>
+      </el-cascader>
+      <el-date-picker v-if="item.type=='datePicker'" v-model="inputQueryOption[item.prop]" @change="onChange()"
+        :type="item.component&&item.component.Type?item.component.Type:'datetime'" :picker-options="{}"
+        range-separator="-" start-placeholder="StartTime" end-placeholder="EndTime" align="right"
+        :value-format="item.component.valueFormat">
+      </el-date-picker>
+      <span v-if="item.type=='radioGroup'">
+        <el-checkbox-group v-model="inputQueryOption[item.prop]">
+          <el-checkbox v-for="(its,ind) in queryItemConfig[item.prop]" :key="'qwe3'+ind" :label="its.value+''">
+            {{its.label}}
+          </el-checkbox>
+        </el-checkbox-group>
+      </span>
+      <span v-if="item.type=='radio'">
+        <el-checkbox-group v-model="inputQueryOption[item.prop]">
+          <el-checkbox v-for="(its,ind) in queryItemConfig[item.prop]" :key="'qwe1'+ind" :label="its.value+''">
+            {{its.label}}
+          </el-checkbox>
+        </el-checkbox-group>
+      </span>
+    </el-form-item>
+    <el-form-item style="float:right" v-if="needAction||needClear">
+      <el-button type="primary" @click="onSearch" v-if="needAction">
+        {{$i18n.get({id:"cngppoc.views.position.PositionList.Query",dm:"查询"})}}</el-button>
+      <el-button type="primary" @click="clearQueryOption" v-if="needClear">
+        {{$i18n.get({id:'cngppoc.views.position.PositionList.clearQueryOption',dm:'重置'})}}</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 <script>
   export default {
-    name: 'InfoBlockByTemplate',
+    name: 'InputFormByTemplate',
     props: {
-      // 预处理函数，目前还没啥用处
-      preDeal: {
-        type: Function,
-        default: () => {
-          return () => {}
-        }
+      // 搜索按钮显示
+      needAction: {
+        type: Boolean,
+        default: false,
+      },
+
+      // 清空按钮显示
+      needClear: {
+        type: Boolean,
+        default: false
       },
 
       // 筛选数据保存参数
@@ -68,78 +94,127 @@
         }
       },
 
-      //labelPosition
-      labelPosition: String,
-
-      // 数据模板，生成格式参考： positionTemplate.js
-      infoDataTemplate: {
+      // 输入数据模板，生成格式参考： cityMapsTemplate.js
+      queryItemOptions: {
         type: Array,
         default: () => {
           return []
         }
       },
+
       // 配套模板的数据源
-      sourceData: {
+      queryOption: {
         type: Object,
         default: () => {
           return {}
         }
-      }
+      },
+
+      // labelPosition
+      labelPosition: {
+        type: String,
+        default: "right"
+      },
+
+      // inline
+      inline: {
+        type: Boolean,
+        default: true
+      },
     },
     data() {
       return {
+        inputQueryOption: {},
         infoData: {},
-        dataTemplate: []
       }
     },
     mounted() {
-      this.setDataTemplate(this.infoDataTemplate)
-      this.setData()
+      this.init()
     },
     watch: {
-      infoDataTemplate: function (val) {
-        this.setDataTemplate(val)
+      queryItemConfig: function (val) {
+        this.init();
       },
-      sourceData: function (e) {
-        this.setData()
-      }
-    },
-    methods: {
-      // 绑定数据
-      setData() {
-        this.infoData = this.sourceData
-      },
-
-      // 模板click事件
-      itsClick(its, infoData) {
-        let that = this
-        if (its.click) {
-          its.click(infoData, that)
-        }
-      },
-
-      // 设置dataTemplate
-      setDataTemplate(val) {
-        this.dataTemplate = []
-        if (typeof val == 'object' && val.length > 0) {
-          if (typeof val[0] != 'object' || !val[0].length) {
-            val.forEach((x, index) => {
-              if (index % (Math.floor(val.length / 3)) == 0) {
-                this.dataTemplate.push([])
-              } else if (this.dataTemplate.length == 0) {
-                this.dataTemplate.push([])
-              }
-              this.dataTemplate[this.dataTemplate.length - 1].push(x)
-            })
-          } else {
-            this.dataTemplate = JSON.parse(JSON.stringify(val))
+      queryOption: function (val) {
+        this.init()
+        for (let x in val) {
+          if (val[x]) {
+            this.inputQueryOption[x] = val[x]
+            this.$set(this.inputQueryOption, x, val[x])
           }
         }
       }
+    },
+    methods: {
+      // 初始化
+      init() {
+        this.$setData({
+          queryItemConfig: this.queryItemConfig
+        })
+        this.queryItemOptions.forEach(x => {
+          if (['selects', 'inputList', 'radioGroup', 'radio'].indexOf(x.type) != '-1') {
+            this.$set(this.inputQueryOption, x.prop, [])
+          } else if (['input', 'select'].indexOf(x.type))
+            this.$set(this.inputQueryOption, x.prop, '')
+        })
+        this.$forceUpdate()
+      },
+
+      // 返回数据修改事件
+      onChange(val = this.inputQueryOption) {
+        let back = {}
+        for (let x in val) {
+          if (val[x])
+            back[x] = val[x]
+        }
+        this.$emit('onChange', back)
+      },
+
+
+      // 地区选择函数 // 暂不支持自定义
+      areaHandleChange(e, action) {
+        let areaId = []
+        e.forEach(x => {
+          areaId.push(x[2])
+        })
+        this.$set(this.inputQueryOption, 'areaIds', areaId)
+        if (action.return) {
+          let that = this
+          action.return(e, that)
+        }
+        this.onChange()
+      },
+
+      // input-list 组件批量输入
+      batchInput(className, propName) {
+        let data = JSON.parse(JSON.stringify(this[className][propName]))
+        let backData = []
+        data.forEach(x => {
+          if (x.split(' ').length > 0) {
+            x.split(' ').map(c => {
+              backData.push(c)
+            })
+          } else {
+            backData.push(x)
+          }
+        })
+        this[className][propName] = backData
+        this.onChange()
+      },
+
+      // 触发搜索事件回调
+      onSearch() {
+        this.$emit('onSearch', this.inputQueryOption)
+      },
+
+      // 清空搜索项
+      clearQueryOption() {
+        this.$emit('clearQueryOption')
+      },
+
     }
 
   }
-
 </script>
 
 <style lang="scss" scoped>
@@ -149,7 +224,7 @@
 
   .infoBlock {
     min-width: 20%;
-    max-width: 50%;
+    max-width: 280px;
     margin: 10px 0px 0px 0px;
     padding: 0px 10px 0px 10px;
     color: #909399;
@@ -167,5 +242,4 @@
     display: flex;
     flex-direction: column;
   }
-
 </style>
