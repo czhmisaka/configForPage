@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2021-08-27 23:23:50
- * @LastEditTime: 2021-10-14 11:05:46
+ * @LastEditTime: 2021-11-16 14:18:03
  * @LastEditors: Please set LastEditors
  * @Description: 主要js工具
  * @FilePath: /configForPage/lib/util/index.js
@@ -248,14 +248,14 @@ function setJsonAsStrToJsonByKey(key, data = {}) {
  * @param {*}
  * @return {*}
  */
-const requireComponent = require.context(
-    // 其组件目录的相对路径
-    '../components/normalListAction/',
-    // 是否查询其子目录
-    true,
-    // 匹配基础组件文件名的正则表达式
-    /.*\.vue/
-)
+// const requireComponent = require.context(
+//     // 其组件目录的相对路径
+//     '../components/normalListAction/',
+//     // 是否查询其子目录
+//     true,
+//     // 匹配基础组件文件名的正则表达式
+//     /.*\.vue/
+// )
 
 
 /**
@@ -266,26 +266,26 @@ const requireComponent = require.context(
  * @param {*} app
  * @return {*}
  */
-function initList(app) {
-    if (!app) return console.log('组件注册失败,未能获取到Vue对象')
-    requireComponent.keys().forEach(fileName => {
-        const componentConfig = requireComponent(fileName)
-        // 获取组件的 PascalCase 命名
-        const componentName = upperFirst(
-            camelCase(
-                fileName
-                .split('/')
-                .pop()
-                .replace(/\.\w+$/, '')
-            )
-        )
-        // 全局注册组件
-        app.component(
-            componentName,
-            componentConfig.default || componentConfig
-        )
-    })
-}
+// function initList(app) {
+//     if (!app) return console.log('组件注册失败,未能获取到Vue对象')
+//     requireComponent.keys().forEach(fileName => {
+//         const componentConfig = requireComponent(fileName)
+//         // 获取组件的 PascalCase 命名
+//         const componentName = upperFirst(
+//             camelCase(
+//                 fileName
+//                 .split('/')
+//                 .pop()
+//                 .replace(/\.\w+$/, '')
+//             )
+//         )
+//         // 全局注册组件
+//         app.component(
+//             componentName,
+//             componentConfig.default || componentConfig
+//         )
+//     })
+// }
 // 全量js对象获取函数
 
 
@@ -345,6 +345,10 @@ function tableToExcelAndDownload(table, fileName) {
         raw: true
     });
     openDownloadDialog(sheet2blob(sheet), fileName + '.xlsx');
+}
+
+const logError = (...args) => {
+    console.error(args)
 }
 
 function init(app, srcList = []) {

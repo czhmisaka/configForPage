@@ -7,7 +7,6 @@
 // 输入插件
 const ConfigForPage = () => {
     this.install = function () {
-
     }
 }
 

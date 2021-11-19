@@ -46,6 +46,7 @@ const searchApiFromJS = (pathList = []) => {
     modules = [];
     pathList.map(x => {
         _getPathInfo(x.src, x.needDeep || false, x.endTag || '.js').map((y) => {
+            console.log(y)
             modules.push(require(y))
         })
     })
